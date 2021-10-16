@@ -24,14 +24,21 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-// Reset database
-Cypress.Commands.add('resetDB', () => {
+
+// Reset database and add initial user
+Cypress.Commands.add('resetDB', (initialUser) => {
   cy.request({
     method: 'POST',
     url: 'http://localhost:3001/api/testing/reset',
   });
   console.log('Database was reset');
 
-  //   cy.request('POST', 'http://localhost:3001/api/testing/reset');
+  cy.request({
+    method: 'POST',
+    url: 'http://localhost:3001/api/users',
+    body: { ...initialUser },
+  });
+  console.log('Initial user was added');
+
   cy.visit('http://localhost:3000');
 });
