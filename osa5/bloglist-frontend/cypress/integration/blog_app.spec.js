@@ -7,7 +7,7 @@ const userA = {
 
 const testBlogA = {
   title: 'This is a new blog by A',
-  author: 'Test author A',
+  author: 'Test author',
   url: 'http://www.mooc.fi',
 };
 
@@ -18,8 +18,14 @@ const userB = {
 };
 
 const testBlogB = {
-  title: 'This is a new blog by B',
-  author: 'Test author B',
+  title: 'This is a new blog B',
+  author: 'Test author',
+  url: 'http://www.mooc.fi',
+};
+
+const testBlogC = {
+  title: 'This is a new blog C',
+  author: 'Test author',
   url: 'http://www.mooc.fi',
 };
 
@@ -74,7 +80,7 @@ describe('Blog app', function () {
       it('it can be liked', function () {
         cy.get('.blog-view-button').click();
         cy.get('.blog-like-button').click();
-        cy.get('.likes').contains('1').click();
+        cy.get('.likes').contains('1');
         cy.get('.blog-like-button').click();
         cy.get('.likes').contains('2');
       });
@@ -87,7 +93,7 @@ describe('Blog app', function () {
         cy.contains('view').should('not.exist');
       });
 
-      it.only("it can' be removed by a user who didn't create it", function () {
+      it("it can' be removed by a user who didn't create it", function () {
         // Create blog with another user
         cy.createBlogWithAnotherUser(userB, testBlogB);
         cy.reload();
@@ -101,6 +107,22 @@ describe('Blog app', function () {
 
         // But it can't be removed
         cy.contains('.blog-remove-button').should('not.exist');
+      });
+    });
+
+    describe('When multiple blogs exist', function () {
+      it('One with the most likes is placed first on the list', function () {
+        cy.createAndAddLikesForBlog(testBlogA, 1);
+        cy.createAndAddLikesForBlog(testBlogB, 3);
+        cy.createAndAddLikesForBlog(testBlogC, 5);
+
+        cy.reload();
+
+        cy.get('li').then((items) => {
+        expect(items[0]).to.contain.text(`${testBlogC.title}`);
+        expect(items[1]).to.contain.text(`${testBlogB.title}`);
+        expect(items[2]).to.contain.text(`${testBlogA.title}`);
+        });
       });
     });
   });
