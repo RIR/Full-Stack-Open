@@ -37,17 +37,17 @@ const BlogForm = React.forwardRef(({ createBlog }, ref) => {
       <form onSubmit={addBlog}>
         <div>
           title
-          <input type='text' value={newBlog.title} name='title' onChange={handleChange} />
+          <input type='text' value={newBlog.title} id='title' name='title' onChange={handleChange} />
         </div>
         <div>
           author
-          <input type='text' value={newBlog.author} name='author' onChange={handleChange} />
+          <input type='text' value={newBlog.author} id='author' name='author' onChange={handleChange} />
         </div>
         <div>
           url
-          <input type='url' value={newBlog.url} name='url' onChange={handleChange} />
+          <input type='url' value={newBlog.url} id='url' name='url' onChange={handleChange} />
         </div>
-        <button type='submit'>Create</button>
+        <button type='submit' id='create-blog-button'>Create</button>
       </form>
     </div>
   );

@@ -26,7 +26,7 @@ const Blog = ({ blog, like, remove, user: currentUser }) => {
     }
   };
 
-  const displayButton = <button onClick={toggleView}>{displayFull ? 'hide' : 'view'}</button>;
+  const displayButton = <button onClick={toggleView} id='view-blog-button'>{displayFull ? 'hide' : 'view'}</button>;
 
   const likeButton = <button onClick={likeBlog}>like</button>;
 
