@@ -24,7 +24,6 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-
 // Reset database and add initial user
 Cypress.Commands.add('resetDB', (initialUser) => {
   cy.request({
@@ -46,9 +45,25 @@ Cypress.Commands.add('resetDB', (initialUser) => {
 // Log in user
 Cypress.Commands.add('login', ({ username, password }) => {
   cy.request('POST', 'http://localhost:3001/api/login', {
-    username, password
+    username,
+    password,
   }).then(({ body }) => {
-    localStorage.setItem('loggedUser', JSON.stringify(body))
-    cy.visit('http://localhost:3000')
-  })
-})
+    localStorage.setItem('loggedUser', JSON.stringify(body));
+    cy.visit('http://localhost:3000');
+  });
+});
+
+// Create a blog
+
+Cypress.Commands.add('createBlog', (blog) => {
+  cy.request({
+    url: 'http://localhost:3001/api/blogs',
+    method: 'POST',
+    body: blog,
+    headers: {
+      Authorization: `bearer ${JSON.parse(localStorage.getItem('loggedUser')).token}`,
+    },
+  });
+
+  cy.visit('http://localhost:3000');
+});
