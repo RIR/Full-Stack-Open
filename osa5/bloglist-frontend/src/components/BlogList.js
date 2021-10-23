@@ -11,11 +11,11 @@ const BlogList = ({ blogs, user, message, likeBlog, removeBlog, handleLogout }) 
       <h2>blogs</h2>
       <Notification message={message} />
       <p>
-        {user.name} logged in <button onClick={handleLogout}>logout</button>
+        {user.name} logged in <button onClick={handleLogout} id='log-out-button'>log out</button>
       </p>
       <ul>
-        {blogs.sort(sortBylikes).map((blog) => (
-          <li key={blog.id}>
+        {blogs.sort(sortBylikes).map((blog, i) => (
+          <li key={blog.id} id={i}>
             <Blog blog={blog} like={likeBlog} remove={removeBlog} user={user} />
           </li>
         ))}

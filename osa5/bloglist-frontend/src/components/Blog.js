@@ -26,12 +26,12 @@ const Blog = ({ blog, like, remove, user: currentUser }) => {
     }
   };
 
-  const displayButton = <button onClick={toggleView} id='blog-view-button'>{displayFull ? 'hide' : 'view'}</button>;
+  const displayButton = <button onClick={toggleView} className='blog-view-button'>{displayFull ? 'hide' : 'view'}</button>;
 
-  const likeButton = <button onClick={likeBlog} id='blog-like-button'>like</button>;
+  const likeButton = <button onClick={likeBlog} className='blog-like-button'>like</button>;
 
   const removeButton = (
-    <button style={{ background: '#34c0eb' }} onClick={removeBlog}>
+    <button style={{ background: '#34c0eb' }} onClick={removeBlog} className='blog-remove-button'>
       remove
     </button>
   );
@@ -49,7 +49,6 @@ const Blog = ({ blog, like, remove, user: currentUser }) => {
           </p>
           <p>{user && user.username}</p>
           {currentUser.username === user.username && removeButton}
-          {removeButton}
         </div>
       )}
     </div>

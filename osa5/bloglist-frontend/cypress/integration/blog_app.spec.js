@@ -1,18 +1,31 @@
-const initialUser = {
+// Used as initial and logged in user
+const userA = {
   password: 'pw12345',
   name: 'initial',
   username: 'initial',
 };
 
-const testBlog = {
-  title: 'This is a new blog',
-  author: 'Test author',
+const testBlogA = {
+  title: 'This is a new blog by A',
+  author: 'Test author A',
+  url: 'http://www.mooc.fi',
+};
+
+const userB = {
+  password: 'pw12345',
+  name: 'User B',
+  username: 'userB',
+};
+
+const testBlogB = {
+  title: 'This is a new blog by B',
+  author: 'Test author B',
   url: 'http://www.mooc.fi',
 };
 
 describe('Blog app', function () {
   beforeEach(function () {
-    cy.resetDB(initialUser);
+    cy.resetDB(userA);
   });
 
   it('Login form is shown', function () {
@@ -21,17 +34,15 @@ describe('Blog app', function () {
 
   describe('Login', function () {
     it('succeeds with correct credentials', function () {
-      cy.get('#username').type(initialUser.name);
-      cy.get('#password').type(initialUser.password);
+      cy.get('#username').type(userA.name);
+      cy.get('#password').type(userA.password);
       cy.get('#login-button').click();
 
-      cy.get('.success')
-        .should('contain', `user ${initialUser.name} logged in`)
-        .and('have.css', 'color', 'rgb(0, 128, 0)');
+      cy.get('.success').should('contain', `user ${userA.name} logged in`).and('have.css', 'color', 'rgb(0, 128, 0)');
     });
 
     it('fails with wrong credentials', function () {
-      cy.get('#username').type(initialUser.name);
+      cy.get('#username').type(userA.name);
       cy.get('#password').type('invalidPassword12345');
       cy.get('#login-button').click();
 
@@ -41,32 +52,56 @@ describe('Blog app', function () {
 
   describe('When logged in', function () {
     beforeEach(function () {
-      cy.login({ username: initialUser.username, password: initialUser.password });
+      cy.login({ username: userA.username, password: userA.password });
     });
 
     it('A blog can be created', function () {
       cy.contains('new blog').click();
-      cy.get('#title').type(testBlog.title);
-      cy.get('#author').type(testBlog.author);
-      cy.get('#url').type(testBlog.url);
+      cy.get('#title').type(testBlogA.title);
+      cy.get('#author').type(testBlogA.author);
+      cy.get('#url').type(testBlogA.url);
       cy.get('#create-blog-button').click();
 
-      cy.contains(`${testBlog.title} ${testBlog.author}`);
-      cy.get('#blog-view-button').contains('view');
+      cy.contains(`${testBlogA.title} ${testBlogA.author}`);
+      cy.get('.blog-view-button').contains('view');
     });
 
     describe('and blog exists', function () {
       beforeEach(function () {
-        cy.createBlog(testBlog);
+        cy.createBlog(testBlogA);
       });
 
       it('it can be liked', function () {
-        cy.get('#blog-view-button').click();
-        cy.get('#blog-like-button').click();
-        cy.get('.likes').contains('1').click()
-        cy.get('#blog-like-button').click();
-        cy.get('.likes').contains('2')
-      })
+        cy.get('.blog-view-button').click();
+        cy.get('.blog-like-button').click();
+        cy.get('.likes').contains('1').click();
+        cy.get('.blog-like-button').click();
+        cy.get('.likes').contains('2');
+      });
+
+      it('it can be removed by a user who created it', function () {
+        cy.get('.blog-view-button').click();
+        cy.get('.blog-remove-button').click();
+
+        cy.contains(`${testBlogA.title} ${testBlogA.author}`).should('not.exist');
+        cy.contains('view').should('not.exist');
+      });
+
+      it.only("it can' be removed by a user who didn't create it", function () {
+        // Create blog with another user
+        cy.createBlogWithAnotherUser(userB, testBlogB);
+        cy.reload();
+
+        // Blog can be viewed
+        cy.get('#1').find('.blog-view-button').click();
+
+        // Blog can be liked
+        cy.get('.blog-like-button').click();
+        cy.get('.likes').contains('1').click();
+
+        // But it can't be removed
+        cy.contains('.blog-remove-button').should('not.exist');
+      });
     });
   });
 });
