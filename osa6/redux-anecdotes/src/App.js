@@ -18,10 +18,12 @@ const App = () => {
     dispatch(addAnecdote(content));
   };
 
+  const byVotes = (a, b) => b.votes - a.votes;
+
   return (
     <div>
       <h2>Anecdotes</h2>
-      {anecdotes.map((anecdote) => (
+      {anecdotes.sort(byVotes).map((anecdote) => (
         <div key={anecdote.id}>
           <div>{anecdote.content}</div>
           <div>
@@ -33,7 +35,7 @@ const App = () => {
       <h2>create new</h2>
       <form onSubmit={add}>
         <div>
-          <input name="anecdote"/>
+          <input name='anecdote' />
         </div>
         <button type='submit'>create</button>
       </form>
