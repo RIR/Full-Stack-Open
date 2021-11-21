@@ -1,18 +1,22 @@
 const initialState = '';
 
 // Action creators
-export const setNotification = (content) => {
-  return {
-    type: 'SET_NOTIFICATION',
-    data: {
-      content: content,
-    },
-  };
-};
-
-export const clearNotification = () => {
-  return {
-    type: 'CLEAR_NOTIFICATION',
+export const setNotification = (content, durationInSeconds = 5) => {
+  const duration = durationInSeconds * 1000;
+  return async (dispatch) => {
+    dispatch({
+      type: 'SET_NOTIFICATION',
+      data: {
+        content: content,
+      },
+    });
+    setTimeout(
+      () =>
+        dispatch({
+          type: 'CLEAR_NOTIFICATION',
+        }),
+      duration
+    );
   };
 };
 

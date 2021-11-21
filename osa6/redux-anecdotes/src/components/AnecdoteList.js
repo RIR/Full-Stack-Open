@@ -10,14 +10,12 @@ const AnecdoteList = () => {
     anecdotes.filter((anecdote) => anecdote.content.toLowerCase().includes(filter.toLowerCase()))
   );
 
-  const vote = (id, content) => {
-    console.log('vote', id);
+  const vote = (id, content, votes) => {
     // Vote
-    dispatch(voteAnecdote(id));
+    dispatch(voteAnecdote(id, votes));
 
     // Notify which anecdote was voted
     dispatch(setNotification(`You voted "${content}"`));
-    setTimeout(() => dispatch(clearNotification()), 5000);
   };
 
   const byVotes = (a, b) => b.votes - a.votes;
@@ -29,7 +27,7 @@ const AnecdoteList = () => {
           <div>{content}</div>
           <div>
             has {votes}
-            <button onClick={() => vote(id, content)}>vote</button>
+            <button onClick={() => vote(id, content, votes)}>vote</button>
           </div>
         </div>
       ))}

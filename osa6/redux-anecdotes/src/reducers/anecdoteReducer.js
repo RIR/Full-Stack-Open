@@ -1,11 +1,12 @@
 import anecdoteService from '../services/anecdotes';
 
 // Action creators
-export const voteAnecdote = (id) => {
+export const voteAnecdote = (id, votes) => {
   return async (dispatch) => {
+    const votedAnecdote = await anecdoteService.vote(id, votes);
     dispatch({
       type: 'VOTE_ANECDOTE',
-      data: id,
+      data: votedAnecdote,
     });
   };
 };
@@ -37,8 +38,8 @@ const reducer = (state = [], action) => {
   switch (action.type) {
     case 'VOTE_ANECDOTE':
       return state.map((anecdote) => {
-        if (anecdote.id === action.data) {
-          return { ...anecdote, votes: (anecdote.votes += 1) };
+        if (anecdote.id === action.data.id) {
+          return action.data;
         } else {
           return anecdote;
         }
