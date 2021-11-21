@@ -1,7 +1,6 @@
 const initialState = '';
 
 // Action creators
-
 export const setNotification = (content) => {
   return {
     type: 'SET_NOTIFICATION',

@@ -3,10 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { voteAnecdote } from '../reducers/anecdoteReducer';
 import { setNotification, clearNotification } from '../reducers/notificationReducer';
 
-
 const AnecdoteList = () => {
   const dispatch = useDispatch();
-  const anecdotes = useSelector((state) => state.anecdotes);
+  const anecdotes = useSelector(({ anecdotes, filter }) =>
+    // Used toLowerCase here in purpose for easier UX IMO
+    anecdotes.filter((anecdote) => anecdote.content.toLowerCase().includes(filter.toLowerCase()))
+  );
 
   const vote = (id, content) => {
     console.log('vote', id);
@@ -22,7 +24,7 @@ const AnecdoteList = () => {
 
   return (
     <div>
-      {anecdotes.sort(byVotes).map(({id, content, votes}) => (
+      {anecdotes.sort(byVotes).map(({ id, content, votes }) => (
         <div key={id}>
           <div>{content}</div>
           <div>
