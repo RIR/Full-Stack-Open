@@ -1,8 +1,10 @@
 const initialState = '';
+let timeoutID = null;
 
 // Action creators
 export const setNotification = (content, durationInSeconds = 5) => {
   const duration = durationInSeconds * 1000;
+
   return async (dispatch) => {
     dispatch({
       type: 'SET_NOTIFICATION',
@@ -10,7 +12,12 @@ export const setNotification = (content, durationInSeconds = 5) => {
         content: content,
       },
     });
-    setTimeout(
+
+    if (timeoutID !== null) {
+      clearTimeout(timeoutID);
+    }
+
+    timeoutID = setTimeout(
       () =>
         dispatch({
           type: 'CLEAR_NOTIFICATION',
