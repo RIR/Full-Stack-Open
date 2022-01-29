@@ -30,7 +30,6 @@ const AnecdoteForm = (props) => {
   );
 };
 
-// export default AnecdoteForm;
 const mapDispatchToProps = {
   addAnecdote,
   setNotification,
