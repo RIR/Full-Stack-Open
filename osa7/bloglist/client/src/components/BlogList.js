@@ -8,6 +8,7 @@ const BlogList = ({ blogFormRef }) => {
   const dispatch = useDispatch();
 
   const user = useSelector(({ user }) => user);
+
   const byLikes = (a, b) => b.likes - a.likes;
   const blogs = useSelector(({ blogs }) => blogs.sort(byLikes));
 
@@ -17,6 +18,12 @@ const BlogList = ({ blogFormRef }) => {
     blogFormRef.current.resetBlogForm();
   };
 
+  /*
+    Having the log out button here feels dumb
+    Also would get rid ot the ref with different
+    composition, but using now what was given
+    in assignment.
+  */
   return (
     <div>
       <h2>blogs</h2>

@@ -19,4 +19,21 @@ blogSchema.set('toJSON', {
   },
 });
 
+blogSchema.post('save', function (blog, next) {
+  blog
+    .populate('user')
+    .execPopulate()
+    .then(function () {
+      next();
+    });
+});
+blogSchema.post('delete', function (blog, next) {
+  blog
+    .populate('user')
+    .execPopulate()
+    .then(function () {
+      next();
+    });
+});
+
 module.exports = mongoose.model('Blog', blogSchema);

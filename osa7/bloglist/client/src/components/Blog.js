@@ -21,7 +21,8 @@ const Blog = ({ blog }) => {
   const toggleView = () => setDisplayFull(!displayFull);
 
   const handleLike = () => {
-    const updatedBlog = { ...blog, likes: (blog.likes += 1) };
+    console.log('TYKÄTTY BLOGI:', { ...blog });
+    const updatedBlog = { ...blog, user: blog.user.id, likes: (blog.likes += 1) };
     dispatch(likeBlog(updatedBlog));
   };
 

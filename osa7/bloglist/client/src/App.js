@@ -6,27 +6,25 @@ import BlogForm from './components/BlogForm';
 import Togglable from './components/Togglable';
 import blogService from './services/blogs';
 import { setUser } from './reducers/userReducer';
-import { initBlogs } from './reducers/blogReducer';
+import { setBlogs } from './reducers/blogReducer';
 
 const App = () => {
   const dispatch = useDispatch();
   const user = useSelector(({ user }) => user);
 
-  const togglableRef = useRef();
   const blogFormRef = useRef();
-
-  const initUser = () => {
-    const loggedUserJSON = window.localStorage.getItem('loggedUser');
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      dispatch(setUser(user));
-      blogService.setToken(user.token);
-    }
-  };
 
   // Initiate blogs and users here
   useEffect(() => {
-    dispatch(initBlogs());
+    dispatch(setBlogs());
+    const initUser = () => {
+      const loggedUserJSON = window.localStorage.getItem('loggedUser');
+      if (loggedUserJSON) {
+        const user = JSON.parse(loggedUserJSON);
+        dispatch(setUser(user));
+        blogService.setToken(user.token);
+      }
+    };
     initUser();
   }, [dispatch]);
 
@@ -36,10 +34,9 @@ const App = () => {
         <LoginForm />
       ) : (
         <div>
-            <BlogList blogFormRef={blogFormRef} />
-            {/* // TODO: Possible get rid of these refs */}
-          <Togglable buttonLabel='new blog' ref={togglableRef}>
-            <BlogForm togglableRef={togglableRef} ref={blogFormRef} />
+          <BlogList blogFormRef={blogFormRef} />
+          <Togglable buttonLabel='new blog'>
+            <BlogForm ref={blogFormRef} />
           </Togglable>
         </div>
       )}

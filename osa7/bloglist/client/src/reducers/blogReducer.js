@@ -2,11 +2,11 @@ import blogService from '../services/blogs';
 import { setNotification } from './notificationReducer';
 
 // Action creators
-export const initBlogs = () => {
+export const setBlogs = () => {
   return async (dispatch) => {
     const blogs = await blogService.getAll();
     dispatch({
-      type: 'INIT_BLOGS',
+      type: 'SET_BLOGS',
       data: blogs,
     });
   };
@@ -16,6 +16,7 @@ export const addBlog = (blog) => {
   return async (dispatch) => {
     try {
       const createdBlog = await blogService.create(blog);
+
       dispatch({
         type: 'ADD_BLOG',
         data: createdBlog,
@@ -75,7 +76,7 @@ export const removeBlog = (blog) => {
 // Reducer
 const reducer = (state = [], action) => {
   switch (action.type) {
-    case 'INIT_BLOGS':
+    case 'SET_BLOGS':
       return action.data;
     case 'ADD_BLOG':
       return [...state, action.data];
