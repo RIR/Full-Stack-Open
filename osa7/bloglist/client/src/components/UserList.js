@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react';
+import { Routes, Route, Link, useMatch } from 'react-router-dom';
+
 import { useSelector, useDispatch } from 'react-redux';
+
 import { setUsers } from '../reducers/userReducer';
+import User from './User';
 
 const UserList = () => {
   const dispatch = useDispatch();
@@ -11,6 +15,9 @@ const UserList = () => {
   useEffect(() => {
     dispatch(setUsers());
   }, [dispatch, blogs.length]);
+
+  const userMatch = useMatch('/users/:id');
+  const user = userMatch ? users.find((user) => user.id === userMatch.params.id) : null;
 
   return (
     <div>
@@ -25,12 +32,18 @@ const UserList = () => {
         <tbody>
           {users.map((user, i) => (
             <tr key={user.id} id={i}>
-              <td>{user.name}</td>
+              <td>
+                <Link to={`/users/${user.id}`}>{user.name}</Link>
+              </td>
               <td>{user.blogs.length}</td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      <Routes>
+        <Route path='/users/:id' element={<User user={user} />} />
+      </Routes>
     </div>
   );
 };
