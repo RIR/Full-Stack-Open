@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setNotification } from '../reducers/notificationReducer';
-import { setUser } from '../reducers/userReducer';
+import { setCurrentUser } from '../reducers/currentUserReducer';
 import Notification from './Notification';
 import { loginService } from '../services';
 
@@ -28,8 +28,8 @@ const LoginForm = () => {
       // Persist user to localStorage
       window.localStorage.setItem('loggedUser', JSON.stringify(user));
 
-      dispatch(setUser(user));
       clearForm();
+      dispatch(setCurrentUser(user));
 
       dispatch(setNotification({ type: 'success', content: `user ${user.username} logged in` }));
     } catch (exception) {

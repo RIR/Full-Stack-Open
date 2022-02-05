@@ -5,24 +5,24 @@ import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
 import Togglable from './components/Togglable';
 import blogService from './services/blogs';
-import { setUser } from './reducers/userReducer';
+import { setCurrentUser } from './reducers/currentUserReducer';
 import { setBlogs } from './reducers/blogReducer';
+import UserList from './components/UserList';
 
 const App = () => {
   const dispatch = useDispatch();
-  const user = useSelector(({ user }) => user);
+  const currentUser = useSelector(({ currentUser }) => currentUser);
 
   const blogFormRef = useRef();
 
-  // Initiate blogs and users here
+  // Initiate blogs and user here
   useEffect(() => {
     dispatch(setBlogs());
     const initUser = () => {
       const loggedUserJSON = window.localStorage.getItem('loggedUser');
       if (loggedUserJSON) {
         const user = JSON.parse(loggedUserJSON);
-        dispatch(setUser(user));
-        blogService.setToken(user.token);
+        dispatch(setCurrentUser(user));
       }
     };
     initUser();
@@ -30,11 +30,12 @@ const App = () => {
 
   return (
     <div>
-      {user === null ? (
+      {currentUser === null ? (
         <LoginForm />
       ) : (
         <div>
           <BlogList blogFormRef={blogFormRef} />
+          <UserList />
           <Togglable buttonLabel='new blog'>
             <BlogForm ref={blogFormRef} />
           </Togglable>

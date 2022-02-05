@@ -16,7 +16,7 @@ const Blog = ({ blog }) => {
   const [displayFull, setDisplayFull] = useState(false);
 
   const dispatch = useDispatch();
-  const currentUser = useSelector(({ user }) => user);
+  const currentUser = useSelector(({ currentUser }) => currentUser);
 
   const toggleView = () => setDisplayFull(!displayFull);
 
