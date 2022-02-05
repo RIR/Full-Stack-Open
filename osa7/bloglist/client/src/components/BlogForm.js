@@ -9,7 +9,7 @@ const initialBlogState = {
   url: '',
 };
 
-const BlogForm = React.forwardRef((props, ref) => {
+const BlogForm = React.forwardRef((_props, ref) => {
   const toggleVisibility = useContext(TogglableContext);
   const [newBlog, setNewBlog] = useState(initialBlogState);
 
