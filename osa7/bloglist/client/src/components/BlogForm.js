@@ -1,5 +1,5 @@
-import React, { useState, useImperativeHandle, useContext } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useContext, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { addBlog } from '../reducers/blogReducer';
 import { TogglableContext } from './Togglable';
 
@@ -9,11 +9,16 @@ const initialBlogState = {
   url: '',
 };
 
-const BlogForm = React.forwardRef((_props, ref) => {
+const BlogForm = () => {
   const toggleVisibility = useContext(TogglableContext);
-  const [newBlog, setNewBlog] = useState(initialBlogState);
 
   const dispatch = useDispatch();
+  const currentUser = useSelector(({ currentUser }) => currentUser);
+  const [newBlog, setNewBlog] = useState(initialBlogState);
+
+  useEffect(() => {
+    if (currentUser == null) resetBlogForm();
+  }, [currentUser]);
 
   const resetBlogForm = () => setNewBlog(initialBlogState);
 
@@ -31,12 +36,6 @@ const BlogForm = React.forwardRef((_props, ref) => {
     dispatch(addBlog(newBlog));
     resetBlogForm();
   };
-
-  useImperativeHandle(ref, () => {
-    return {
-      resetBlogForm,
-    };
-  });
 
   return (
     <div>
@@ -60,8 +59,6 @@ const BlogForm = React.forwardRef((_props, ref) => {
       </form>
     </div>
   );
-});
-
-BlogForm.displayName = 'BlogForm';
+};
 
 export default BlogForm;

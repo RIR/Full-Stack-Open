@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { setUsers } from '../reducers/userReducer';
 
-const UserList = ({ users }) => {
+const UserList = () => {
+  const dispatch = useDispatch();
+  const users = useSelector(({ users }) => users);
+  const blogs = useSelector(({ blogs }) => blogs);
+
+  // Initiate users
+  useEffect(() => {
+    dispatch(setUsers());
+  }, [blogs.length]);
+
   return (
     <div>
       <h2>Users</h2>

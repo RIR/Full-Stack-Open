@@ -1,9 +1,13 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { likeBlog, removeBlog } from '../reducers/blogReducer';
 
-const Blog = ({ blog }) => {
+const Blog = () => {
+  const { id } = useParams();
   const dispatch = useDispatch();
+
+  const blog = useSelector(({ blogs }) => blogs.find((blog) => blog.id === id));
   const currentUser = useSelector(({ currentUser }) => currentUser);
 
   const handleLike = () => {
