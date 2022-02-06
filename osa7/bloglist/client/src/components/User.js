@@ -1,3 +1,4 @@
+import { List, ListItem, ListSubheader } from '@material-ui/core';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
@@ -9,12 +10,18 @@ const User = () => {
   return (
     <div>
       <h2>{user.name}</h2>
-      <h3>Added blogs</h3>
-      {user.blogs.map((blog, i) => (
-        <li key={blog.id} id={i}>
-          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-        </li>
-      ))}
+      <List
+        subheader={
+          <ListSubheader component='div' id='nested-list-subheader'>
+            Added Blogs
+          </ListSubheader>
+        }>
+        {user.blogs.map((blog, i) => (
+          <ListItem disablePadding key={blog.id} id={i}>
+            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+          </ListItem>
+        ))}
+      </List>
     </div>
   );
 };

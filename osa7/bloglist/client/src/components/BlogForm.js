@@ -1,3 +1,4 @@
+import { Button, TextField } from '@material-ui/core';
 import React, { useState, useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addBlog } from '../reducers/blogReducer';
@@ -38,24 +39,28 @@ const BlogForm = () => {
   };
 
   return (
-    <div>
+    <div style={{ margin: '15px 0px' }}>
       <h2>Create new</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          title
-          <input type='text' value={newBlog.title} id='title' name='title' onChange={handleChange} />
+          <TextField label='title' type='text' value={newBlog.title} id='title' name='title' onChange={handleChange} />
         </div>
         <div>
-          author
-          <input type='text' value={newBlog.author} id='author' name='author' onChange={handleChange} />
+          <TextField
+            label='author'
+            type='text'
+            value={newBlog.author}
+            id='author'
+            name='author'
+            onChange={handleChange}
+          />
         </div>
-        <div>
-          url
-          <input type='url' value={newBlog.url} id='url' name='url' onChange={handleChange} />
+        <div style={{marginBottom: '10px'}}>
+          <TextField label='url' type='url' value={newBlog.url} id='url' name='url' onChange={handleChange} />
         </div>
-        <button type='submit' id='create-blog-button'>
+        <Button variant='contained' color='primary' id='create-blog-button' type='submit'>
           Create
-        </button>
+        </Button>
       </form>
     </div>
   );

@@ -1,3 +1,4 @@
+import { Button, IconButton } from '@material-ui/core';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -38,16 +39,12 @@ const Blog = () => {
   };
 
   // Buttons
-  const likeButton = (
-    <button onClick={handleLike} className='blog-like-button'>
-      like
-    </button>
-  );
+  const likeButton = <Button onClick={handleLike}>like</Button>;
 
   const removeButton = (
-    <button style={{ background: '#34c0eb' }} onClick={handleRemove} className='blog-remove-button'>
+    <Button variant='contained' color='warning' onClick={handleRemove}>
       remove
-    </button>
+    </Button>
   );
 
   if (!blog) {
@@ -68,12 +65,12 @@ const Blog = () => {
       </div>
       <h3>comments</h3>
       <form onSubmit={handleSubmitComment}>
-        <div>
+        <div style={{ marginBottom: '10px' }}>
           <input type='text' value={comment} id='comment' name='comment' onChange={handleCommentChange} />
         </div>
-        <button type='submit' id='create-blog-button'>
+        <Button variant='contained' color='primary' type='submit' id='create-blog-button'>
           add comment
-        </button>
+        </Button>
       </form>
       <ul>
         {comments.map((comment, i) => (

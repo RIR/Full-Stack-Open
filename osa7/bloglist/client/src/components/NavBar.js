@@ -1,3 +1,4 @@
+import { AppBar, Button, Toolbar, Typography } from '@material-ui/core';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -12,27 +13,21 @@ const NavBar = () => {
     dispatch(clearCurrentUser());
   };
 
-  const logOutInfoAndButton = (
-    <p>
-      {currentUser.name} logged in{' '}
-      <button onClick={handleLogout} id='log-out-button'>
-        log out
-      </button>
-    </p>
-  );
-
   return (
-    <div style={{ backgroundColor: 'lightgrey', height: 'auto', padding: 0, margin: 0 }}>
-      <ul className='navBar'>
-        <li>
-          <Link to='/blogs'>Blogs</Link>
-        </li>
-        <li>
-          <Link to='/users'>Users</Link>
-        </li>
-        <li>{logOutInfoAndButton}</li>
-      </ul>
-    </div>
+    <AppBar position='static'>
+      <Toolbar>
+        <Button color='inherit' component={Link} to='/'>
+          Blogs
+        </Button>
+        <Button color='inherit' component={Link} to='/users'>
+          Users
+        </Button>
+        <Typography>{currentUser.name} logged in </Typography>
+        <Button color='inherit' onClick={handleLogout} id='log-out-button' sx={{ alignSelf: 'end' }}>
+          log out
+        </Button>
+      </Toolbar>
+    </AppBar>
   );
 };
 export default NavBar;

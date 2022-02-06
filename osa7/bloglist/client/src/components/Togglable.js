@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from '@material-ui/core';
 
 // Maybe not the cleanest solution to place the
 // context here, but not creating a new structure
@@ -17,13 +18,15 @@ const Togglable = (props) => {
 
   return (
     <TogglableContext.Provider value={() => setVisible(!visible)}>
-      <div>
+      <div style={{margin: '10px 0px'}}>
         <div style={hideWhenVisible}>
-          <button onClick={toggleVisibility}>{props.buttonLabel}</button>
+          <Button variant='outlined' onClick={toggleVisibility}>
+            {props.buttonLabel}
+          </Button>
         </div>
         <div style={showWhenVisible}>
           {props.children}
-          <button onClick={toggleVisibility}>cancel</button>
+          <Button variant='outlined' onClick={toggleVisibility}>cancel</Button>
         </div>
       </div>
     </TogglableContext.Provider>
@@ -35,3 +38,4 @@ Togglable.propTypes = {
 };
 
 export default Togglable;
+

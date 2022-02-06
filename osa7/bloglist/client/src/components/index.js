@@ -7,3 +7,4 @@ export { default as Notification } from './Notification';
 export { default as Togglable } from './Togglable';
 export { default as User } from './User';
 export { default as UserList } from './UserList';
+export { default as Home } from './Home';

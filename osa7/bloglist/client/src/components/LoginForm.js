@@ -4,12 +4,15 @@ import { setNotification } from '../reducers/notificationReducer';
 import { setCurrentUser } from '../reducers/currentUserReducer';
 import Notification from './Notification';
 import { loginService } from '../services';
+import { useNavigate } from 'react-router-dom';
+import { Button, TextField } from '@material-ui/core';
 
 const LoginForm = () => {
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
 
   const dispatch = useDispatch();
+  let navigate = useNavigate();
 
   const clearForm = () => {
     setUsername('');
@@ -31,6 +34,7 @@ const LoginForm = () => {
       clearForm();
       dispatch(setCurrentUser(user));
 
+      navigate('/');
       dispatch(setNotification({ type: 'success', content: `user ${user.username} logged in` }));
     } catch (exception) {
       dispatch(setNotification({ type: 'error', content: 'wrong username or password' }));
@@ -43,28 +47,25 @@ const LoginForm = () => {
       <Notification />
       <form onSubmit={handleLogin}>
         <div>
-          username
-          <input
-            type='text'
+          <TextField
             value={username}
             id='username'
-            name='Username'
+            label='username'
             onChange={({ target }) => setUsername(target.value)}
           />
         </div>
-        <div>
-          password
-          <input
+        <div style={{marginBottom: '10px'}}>
+          <TextField
+            label='password'
             type='password'
             value={password}
             id='password'
-            name='Password'
             onChange={({ target }) => setPassword(target.value)}
           />
         </div>
-        <button type='submit' id='login-button'>
+        <Button variant='contained' color='primary' type='submit'>
           login
-        </button>
+        </Button>
       </form>
     </div>
   );

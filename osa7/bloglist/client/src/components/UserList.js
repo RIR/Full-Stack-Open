@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+
 import { setUsers } from '../reducers/userReducer';
 
 const UserList = () => {
@@ -15,25 +17,26 @@ const UserList = () => {
 
   return (
     <div>
-      <h2>Users</h2>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>blogs created</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user, i) => (
-            <tr key={user.id} id={i}>
-              <td>
-                <Link to={user.id}>{user.name}</Link>
-              </td>
-              <td>{user.blogs.length}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <TableContainer component={Paper}>
+        <Table size='small'>
+          <TableHead>
+            <TableRow>
+              <TableCell>User</TableCell>
+              <TableCell align='right'>Blogs created</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {users.map((user, i) => (
+              <TableRow key={user.id} id={i} hover={true}>
+                <TableCell>
+                  <Link to={user.id}>{user.name}</Link>
+                </TableCell>
+                <TableCell align='right'>{user.blogs.length}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };

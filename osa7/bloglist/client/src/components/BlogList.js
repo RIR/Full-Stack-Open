@@ -1,17 +1,11 @@
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { BlogForm, Togglable } from '.';
 import { setBlogs } from '../reducers/blogReducer';
 
 const BlogList = () => {
-  const blogItemStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-  };
-
   const dispatch = useDispatch();
 
   const byLikes = (a, b) => b.likes - a.likes;
@@ -24,14 +18,29 @@ const BlogList = () => {
 
   return (
     <div>
-      <h2>blogs</h2>
-      <ul>
-        {blogs.map((blog, i) => (
-          <li key={blog.id} id={i} style={blogItemStyle}>
-            <Link to={blog.id}>{blog.title}</Link>
-          </li>
-        ))}
-      </ul>
+      <Togglable buttonLabel='new blog'>
+        <BlogForm />
+      </Togglable>
+      <TableContainer component={Paper}>
+        <Table size='small'>
+          <TableHead>
+            <TableRow>
+              <TableCell>Title</TableCell>
+              <TableCell align='right'>Author</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {blogs.map((blog, i) => (
+              <TableRow key={blog.id} hover={true}>
+                <TableCell sortDirection='asc'>
+                  <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                </TableCell>
+                <TableCell align='right'>{blog.author}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };

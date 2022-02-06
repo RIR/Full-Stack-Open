@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Routes, Route } from 'react-router-dom';
-
-import { Blog, BlogForm, BlogList, LoginForm, NavBar, Notification, User, UserList, Togglable } from './components';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { Home, LoginForm } from './components';
 import { setCurrentUser } from './reducers/currentUserReducer';
 
 const App = () => {
@@ -22,26 +21,10 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <div>
-      {currentUser === null ? (
-        <LoginForm />
-      ) : (
-        <div>
-          <NavBar />
-          <h1>Blog App</h1>
-          <Togglable buttonLabel='new blog'>
-            <BlogForm />
-          </Togglable>
-          <Notification />
-          <Routes>
-            <Route path='blogs/' element={<BlogList />} />
-            <Route path='blogs/:id' element={<Blog />} />
-            <Route path='users/' element={<UserList />} />
-            <Route path='users/:id' element={<User />} />
-          </Routes>
-        </div>
-      )}
-    </div>
+    <Routes>
+      <Route path='*' element={currentUser ? <Home /> : <Navigate to='/login' />} />
+      <Route path='/login' element={<LoginForm />} />
+    </Routes>
   );
 };
 
