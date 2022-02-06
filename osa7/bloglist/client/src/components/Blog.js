@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { likeBlog, removeBlog } from '../reducers/blogReducer';
+import { commentBlog, likeBlog, removeBlog } from '../reducers/blogReducer';
 
 const Blog = () => {
   const { id } = useParams();
@@ -10,17 +10,34 @@ const Blog = () => {
   const blog = useSelector(({ blogs }) => blogs.find((blog) => blog.id === id));
   const currentUser = useSelector(({ currentUser }) => currentUser);
 
+  const [comment, setComment] = useState('');
+
+  // Like control logic
   const handleLike = () => {
     const updatedBlog = { ...blog, user: blog.user.id, likes: (blog.likes += 1) };
     dispatch(likeBlog(updatedBlog));
   };
 
+  // Remove control logic
   const handleRemove = () => {
     if (window.confirm(`Remove blog ${title} by ${author}?`)) {
       dispatch(removeBlog(blog));
     }
   };
 
+  // Comment control logic
+  const handleCommentChange = (event) => {
+    const value = event.target.value;
+    setComment(value);
+  };
+
+  const handleSubmitComment = (event) => {
+    event.preventDefault();
+    dispatch(commentBlog(blog.id, comment));
+    setComment('');
+  };
+
+  // Buttons
   const likeButton = (
     <button onClick={handleLike} className='blog-like-button'>
       like
@@ -37,7 +54,7 @@ const Blog = () => {
     return null;
   }
 
-  const { title, author, url, likes, user = { username: 'random' } } = blog;
+  const { title, author, url, likes, user = { username: 'random' }, comments = [] } = blog;
   return (
     <div>
       <h2>{title}</h2>
@@ -49,6 +66,22 @@ const Blog = () => {
         <p>added by: {user && user.username}</p>
         {currentUser.username === user.username && removeButton}
       </div>
+      <h3>comments</h3>
+      <form onSubmit={handleSubmitComment}>
+        <div>
+          <input type='text' value={comment} id='comment' name='comment' onChange={handleCommentChange} />
+        </div>
+        <button type='submit' id='create-blog-button'>
+          add comment
+        </button>
+      </form>
+      <ul>
+        {comments.map((comment, i) => (
+          <li key={i} id={i}>
+            {comment}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

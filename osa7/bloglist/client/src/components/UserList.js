@@ -11,7 +11,7 @@ const UserList = () => {
   // Initiate users
   useEffect(() => {
     dispatch(setUsers());
-  }, [blogs.length]);
+  }, [dispatch, blogs.length]);
 
   return (
     <div>

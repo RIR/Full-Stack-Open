@@ -38,7 +38,7 @@ export const likeBlog = (blog) => {
     try {
       const likedBlog = await blogService.update(blog);
       dispatch({
-        type: 'LIKE_BLOG',
+        type: 'UPDATE_BLOG',
         data: likedBlog,
       });
       dispatch(
@@ -49,6 +49,26 @@ export const likeBlog = (blog) => {
       );
     } catch (error) {
       dispatch(setNotification({ type: 'error', content: 'liking failed' }));
+    }
+  };
+};
+
+export const commentBlog = (id, blog) => {
+  return async (dispatch) => {
+    try {
+      const commentedBlog = await blogService.comment(id, blog);
+      dispatch({
+        type: 'UPDATE_BLOG',
+        data: commentedBlog,
+      });
+      dispatch(
+        setNotification({
+          type: 'success',
+          content: `Comment was added to blog ${commentedBlog.title}`,
+        })
+      );
+    } catch (error) {
+      dispatch(setNotification({ type: 'error', content: 'commenting failed' }));
     }
   };
 };
@@ -80,7 +100,7 @@ const reducer = (state = [], action) => {
       return action.data;
     case 'ADD_BLOG':
       return [...state, action.data];
-    case 'LIKE_BLOG':
+    case 'UPDATE_BLOG':
       return state.map((blog) => {
         if (blog.id === action.data.id) {
           return action.data;
