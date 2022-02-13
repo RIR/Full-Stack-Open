@@ -84,16 +84,43 @@ let books = [
 ];
 
 const typeDefs = gql`
+  type Author {
+    name: String!
+    id: ID!
+    born: Int!
+    bookCount: Int!
+  }
+  type Book {
+    title: String!
+    published: Int!
+    author: String!
+    id: ID!
+    genres: [String]!
+  }
+
   type Query {
     bookCount: Int!
     authorCount: Int!
+    allBooks: [Book!]!
+    allAuthors: [Author!]!
   }
 `;
 
 const resolvers = {
-    Query: {
-      bookCount: () => books.length,
-      authorCount: () => authors.length,
+  Query: {
+    bookCount: () => books.length,
+    authorCount: () => authors.length,
+    allBooks: () => books,
+    allAuthors: () => authors,
+  },
+  Author: {
+    bookCount: (root) =>
+      books.reduce((count, book) => {
+        if (book.author === root.name) {
+          count += 1;
+        }
+        return count;
+      }, 0),
   },
 };
 
