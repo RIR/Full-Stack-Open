@@ -1,5 +1,5 @@
 const { ApolloServer, gql } = require('apollo-server');
-const { argsToArgsConfig } = require('graphql/type/definition');
+const { v1: uuid } = require('uuid');
 
 let authors = [
   {
@@ -88,7 +88,7 @@ const typeDefs = gql`
   type Author {
     name: String!
     id: ID!
-    born: Int!
+    born: Int
     bookCount: Int!
   }
   type Book {
@@ -104,6 +104,10 @@ const typeDefs = gql`
     authorCount: Int!
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
+  }
+
+  type Mutation {
+    addBook(title: String!, published: Int!, author: String!, genres: [String]!): Book
   }
 `;
 
@@ -122,6 +126,17 @@ const resolvers = {
         : books;
     },
     allAuthors: () => authors,
+  },
+  Mutation: {
+    addBook: (root, args) => {
+      const newBook = { ...args, id: uuid() };
+      books = books.concat(newBook);
+      if (!authors.some((author) => author.name === newBook.author)) {
+        const newAuthor = { name: newBook.author, id: uuid(), born: null };
+        authors = authors.concat(newAuthor);
+      }
+      return newBook;
+    },
   },
   Author: {
     bookCount: (root) =>
