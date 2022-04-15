@@ -1,23 +1,32 @@
 import { useQuery } from '@apollo/client';
 import React, { useState } from 'react';
-import { ALL_BOOKS } from '../queries';
+import { ALL_BOOKS, ALL_GENRES } from '../queries';
 
 const Books = () => {
-  const { loading, data } = useQuery(ALL_BOOKS);
   const [chosenGenre, setChosenGenre] = useState('');
+  // Apparently this could be done for example with this or using refetch() inside useEffect
+  const { loading, data: bookData } = useQuery(ALL_BOOKS, {
+    variables: { genre: chosenGenre },
+  });
+
+  // Apollo seems to cache info a lot so this is not that bad
+  const { data: genreData } = useQuery(ALL_GENRES);
 
   if (loading) {
     return <div>loading...</div>;
   }
 
-  const books = data.allBooks;
-  const filteredBooks = chosenGenre === '' ? books : books.filter((book) => book.genres.includes(chosenGenre));
-  const genres = books.flatMap((book) => book.genres);
+  const books = bookData.allBooks;
+  const genres = genreData.allGenres;
 
   return (
     <div>
       <h2>books</h2>
-      {chosenGenre && <p>in genre <strong>{chosenGenre}</strong></p>}
+      {chosenGenre && (
+        <p>
+          in genre <strong>{chosenGenre}</strong>
+        </p>
+      )}
       <table>
         <tbody>
           <tr>
@@ -25,7 +34,7 @@ const Books = () => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {filteredBooks.map((book) => (
+          {books.map((book) => (
             <tr key={book.title}>
               <td>{book.title}</td>
               <td>{book.author.name}</td>
