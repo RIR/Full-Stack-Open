@@ -1,18 +1,31 @@
 import { useQuery } from '@apollo/client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ALL_BOOKS, ALL_GENRES } from '../queries';
 
 const Books = () => {
   const [chosenGenre, setChosenGenre] = useState('');
-  // Apparently this could be done for example with this or using refetch() inside useEffect
-  const { loading, data: bookData } = useQuery(ALL_BOOKS, {
-    variables: { genre: chosenGenre },
-  });
+
+  const { loading: booksDataLoading, data: bookData, refetch } = useQuery(ALL_BOOKS);
 
   // Apollo seems to cache info a lot so this is not that bad
-  const { data: genreData } = useQuery(ALL_GENRES);
+  const { loading: genreDataLoading, data: genreData } = useQuery(ALL_GENRES);
 
-  if (loading) {
+  useEffect(() => {
+    refetch({ genre: chosenGenre });
+    console.log('REFETCHED');
+  }, [chosenGenre]); // eslint-disable-line
+
+  /*
+  ```js
+   Seems like solution like
+    const { loading: booksDataLoading, data: bookData } = useQuery(ALL_BOOKS, {
+     variables: { genre: chosenGenre },
+   });
+   ```
+   would work too, but there were some possible issues with loading when refreshing the page
+   */
+
+  if (booksDataLoading || genreDataLoading) {
     return <div>loading...</div>;
   }
 

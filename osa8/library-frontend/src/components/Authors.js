@@ -71,7 +71,9 @@ const Authors = ({ setError }) => {
           born
           <input type='number' value={born} onChange={({ target }) => setBorn(target.value)} />
         </div>
-        <button type='submit'>update author</button>
+        <button type='submit' disabled={born === '' || name === ''}>
+          update author
+        </button>
       </form>
     </div>
   );
