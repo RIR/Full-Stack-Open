@@ -1,15 +1,26 @@
 require('dotenv').config();
-const { ApolloServer, gql, UserInputError, AuthenticationError } = require('apollo-server');
+const { ApolloServer } = require('apollo-server-express');
+const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core');
+const { makeExecutableSchema } = require('@graphql-tools/schema');
+
+const { execute, subscribe } = require('graphql');
+const { SubscriptionServer } = require('subscriptions-transport-ws');
+
+const express = require('express');
+const http = require('http');
+
 const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
 
-const Book = require('./models/book');
-const Author = require('./models/author');
-const User = require('./models/user');
-
-const MONGODB_URI = process.env.MONGODB_URI;
 const JWT_SECRET = process.env.JWT_SECRET;
 
+const mongoose = require('mongoose');
+
+const User = require('./models/user');
+
+const typeDefs = require('./schema');
+const resolvers = require('./resolvers');
+
+const MONGODB_URI = process.env.MONGODB_URI;
 console.log('connecting to', MONGODB_URI);
 
 mongoose
@@ -21,156 +32,62 @@ mongoose
     console.log('error connection to MongoDB:', error.message);
   });
 
-const typeDefs = gql`
-  type Author {
-    name: String!
-    id: ID!
-    born: Int
-    bookCount: Int!
-  }
-  type Book {
-    title: String!
-    published: Int!
-    author: Author!
-    id: ID!
-    genres: [String]!
-  }
+const start = async () => {
+  // Express server
+  const app = express();
+  const httpServer = http.createServer(app);
 
-  type User {
-    username: String!
-    favoriteGenre: String!
-    id: ID!
-  }
+  // Schema defs
+  const schema = makeExecutableSchema({ typeDefs, resolvers });
 
-  type Token {
-    value: String!
-  }
-
-  type Query {
-    bookCount: Int!
-    authorCount: Int!
-    allBooks(author: String, genre: String): [Book!]!
-    allAuthors: [Author!]!
-    allGenres: [String]!
-    me: User
-  }
-
-  type Mutation {
-    addBook(title: String!, published: Int!, author: String!, genres: [String]!): Book
-    editAuthor(name: String!, setBornTo: Int!): Author
-    createUser(username: String!, favoriteGenre: String!): User
-    login(username: String!, password: String!): Token
-  }
-`;
-
-const resolvers = {
-  Query: {
-    bookCount: async () => Book.countDocuments(),
-    authorCount: async () => Author.countDocuments(),
-    allBooks: async (root, args) => {
-      const books = await Book.find({ ...(args.genre && { genres: { $in: [args.genre] } }) }).populate('author');
-      return args.author ? books.filter((book) => book.author.name === args.author) : books;
+  // Subscription server
+  const subscriptionServer = SubscriptionServer.create(
+    {
+      schema,
+      execute,
+      subscribe,
     },
-    allAuthors: async () => Author.find({}),
-    allGenres: async () => {
-      const allBooks = await Book.find();
-      const genres = [...new Set(allBooks.flatMap((book) => book.genres))];
-      return genres;
-    },
-    me: async (root, args, context) => context.currentUser,
-  },
-  Mutation: {
-    addBook: async (root, args, context) => {
-      if (!context.currentUser) {
-        throw new AuthenticationError('not authenticated');
-      }
+    {
+      server: httpServer,
+      path: '',
+    }
+  );
 
-      const book = new Book({ ...args });
-      const author = await Author.findOne({ name: args.author });
-
-      try {
-        if (!author) {
-          const newAuthor = new Author({ name: args.author, born: null });
-          await newAuthor.save();
-
-          book.author = newAuthor;
-        } else {
-          book.author = author;
-        }
-
-        await book.save();
-      } catch (error) {
-        throw new UserInputError(error.message, {
-          invalidArgs: args,
-        });
-      }
-
-      return book;
-    },
-    editAuthor: async (root, args, context) => {
-      if (!context.currentUser) {
-        throw new AuthenticationError('not authenticated');
-      }
-
-      try {
-        const author = Author.findOneAndUpdate({ name: args.name }, { born: args.setBornTo }, { new: true });
-        return author;
-      } catch (error) {
-        throw new UserInputError(error.message, {
-          invalidArgs: args,
-        });
+  // Apollo server
+  const server = new ApolloServer({
+    schema,
+    context: async ({ req }) => {
+      const auth = req ? req.headers.authorization : null;
+      if (auth && auth.toLowerCase().startsWith('bearer ')) {
+        const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET);
+        const currentUser = await User.findById(decodedToken.id);
+        return { currentUser };
       }
     },
-    createUser: async (root, args) => {
-      const user = new User({ username: args.username, favoriteGenre: args.favoriteGenre });
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              subscriptionServer.close();
+            },
+          };
+        },
+      },
+    ],
+  });
 
-      return user.save().catch((error) => {
-        throw new UserInputError(error.message, {
-          invalidArgs: args,
-        });
-      });
-    },
-    login: async (root, args) => {
-      const user = await User.findOne({ username: args.username });
+  await server.start();
 
-      /*
-      Notice that the same hard coded password is used for all users
-      */
-      if (!user || args.password !== 'secret') {
-        throw new UserInputError('wrong credentials');
-      }
+  server.applyMiddleware({
+    app,
+    path: '/',
+  });
 
-      const userForToken = {
-        username: user.username,
-        id: user._id,
-      };
+  const PORT = 4000;
 
-      return { value: jwt.sign(userForToken, JWT_SECRET) };
-    },
-  },
-  Author: {
-    bookCount: async (root) => {
-      const allBooks = await Book.find().populate('author');
-      const bookCount = allBooks.reduce((count, book) => (book.author.name === root.name ? (count += 1) : count), 0);
-
-      return bookCount;
-    },
-  },
+  httpServer.listen(PORT, () => console.log(`Server is now running on http://localhost:${PORT}`));
 };
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  context: async ({ req }) => {
-    const auth = req ? req.headers.authorization : null;
-    if (auth && auth.toLowerCase().startsWith('bearer ')) {
-      const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET);
-      const currentUser = await User.findById(decodedToken.id);
-      return { currentUser };
-    }
-  },
-});
-
-server.listen().then(({ url }) => {
-  console.log(`Server ready at ${url}`);
-});
+start();
