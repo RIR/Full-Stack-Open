@@ -3,10 +3,10 @@ import React from 'react';
 import { ALL_BOOKS, CURRENT_USER } from '../queries';
 
 const Recommendations = () => {
-  const { loading, data: bookData } = useQuery(ALL_BOOKS);
-  const { data: currentUserData } = useQuery(CURRENT_USER);
+  const { loading: booksDataLoading, data: bookData } = useQuery(ALL_BOOKS);
+  const { loading: userDataLoading, data: currentUserData } = useQuery(CURRENT_USER);
 
-  if (loading) {
+  if (booksDataLoading || userDataLoading) {
     return <div>loading...</div>;
   }
 

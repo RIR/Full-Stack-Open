@@ -1,4 +1,4 @@
-import { useApolloClient } from '@apollo/client';
+import { useSubscription, useApolloClient } from '@apollo/client';
 import React, { useState } from 'react';
 import Authors from './components/Authors';
 import Books from './components/Books';
@@ -6,18 +6,32 @@ import LoginForm from './components/LoginForm';
 import NewBook from './components/NewBook';
 import Recommendations from './components/Recommendations';
 import Notify from './components/Notify';
+import { BOOK_ADDED } from './queries';
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem('library-user-token'));
   const [page, setPage] = useState('authors');
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [notification, setNotification] = useState(null);
 
   const client = useApolloClient();
 
-  const notify = (message) => {
-    setErrorMessage(message);
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log(subscriptionData);
+
+      const { title, author } = subscriptionData.data.bookAdded;
+      notify(`New book ${title} by ${author.name} added`, 'success');
+    },
+  });
+
+  /*
+Default type to error. Alternative would be to have
+helper functions with set types to call this.
+  */
+  const notify = (message, type = 'error') => {
+    setNotification({ message, type });
     setTimeout(() => {
-      setErrorMessage(null);
+      setNotification(null);
     }, 5000);
   };
 
@@ -30,7 +44,7 @@ const App = () => {
   if (!token) {
     return (
       <>
-        <Notify errorMessage={errorMessage} />
+        <Notify notification={notification} />
         <LoginForm setToken={setToken} setError={notify} />
       </>
     );
@@ -39,7 +53,7 @@ const App = () => {
   return (
     <div>
       <div>
-        <Notify errorMessage={errorMessage} />
+        <Notify notification={notification} />
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>

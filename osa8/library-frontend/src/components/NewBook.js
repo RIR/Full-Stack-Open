@@ -41,15 +41,15 @@ const NewBook = ({ setError }) => {
       <form onSubmit={submit}>
         <div>
           title
-          <input value={title} onChange={({ target }) => setTitle(target.value)} />
+          <input required value={title} onChange={({ target }) => setTitle(target.value)} />
         </div>
         <div>
           author
-          <input value={author} onChange={({ target }) => setAuthor(target.value)} />
+          <input required value={author} onChange={({ target }) => setAuthor(target.value)} />
         </div>
         <div>
           published
-          <input type='number' value={published} onChange={({ target }) => setPublished(target.value)} />
+          <input required type='number' value={published} onChange={({ target }) => setPublished(target.value)} />
         </div>
         <div>
           <input value={genre} onChange={({ target }) => setGenre(target.value)} />
@@ -58,7 +58,9 @@ const NewBook = ({ setError }) => {
           </button>
         </div>
         <div>genres: {genres.join(' ')}</div>
-        <button type='submit'>create book</button>
+        <button type='submit' disabled={genres.length === 0}>
+          create book
+        </button>
       </form>
     </div>
   );
