@@ -7,6 +7,11 @@ const ratings: Readonly<{ 1: 'Have to do better'; 2: 'Pretty decent'; 3: 'Excell
 type Rating = keyof typeof ratings;
 type RatingDescription = typeof ratings[Rating];
 
+interface ExerciseArgs {
+  target: number;
+  dailyExerciseHours: number[];
+}
+
 interface ExerciseData {
   periodLength: number;
   trainingDays: number;
@@ -25,9 +30,20 @@ const getRating = (consistency: number, success: boolean): Rating => {
 
 const getRatingDescription = (rating: Rating): RatingDescription => ratings[rating];
 
+const parsedExerciseArgs = (args: Array<string>): ExerciseArgs => {
+  if (args.length < 2) throw new Error('Not enough arguments');
+
+  const [target, ...dailyExerciseHours] = args.map((arg) => {
+    if (isNaN(Number(arg))) throw new Error(`Provided value "${arg}" is not a number`);
+    else return Number(arg);
+  });
+
+  return { dailyExerciseHours, target };
+};
+
 const calculateExercises = (dailyExerciseHours: number[], target: number): ExerciseData => {
   /*
-This is really not an optimal way, since I'm looping the array multiple times here,
+This is really not an optimal way because I'm looping the array multiple times here,
 but I'm thinking that's not the main point here. Could consider .reduce etc. to get
 multiple values in a single loop.
 */
@@ -53,4 +69,16 @@ multiple values in a single loop.
   return exerciseData;
 };
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+// 9.2
+// console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+
+try {
+  const { dailyExerciseHours, target }: ExerciseArgs = parsedExerciseArgs(process.argv.slice(2));
+  console.log(calculateExercises(dailyExerciseHours, target));
+} catch (error) {
+  let errorMessage = 'Something bad happened.';
+  if (error instanceof Error) {
+    errorMessage += ' Error: ' + error.message;
+  }
+  console.log(errorMessage);
+}
