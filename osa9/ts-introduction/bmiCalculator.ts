@@ -1,9 +1,20 @@
-interface BmiArgs {
+export interface ParsedBmiArgs {
   height: number;
   weight: number;
 }
 
-const parsedBmiArgs = (args: Array<string>): BmiArgs => {
+/*
+ Could also `export interface BmiResponse extends BmiArgs`
+ here, but maybe that's a bit hazy abstraction
+*/
+export interface BmiResponse {
+  height: number;
+  weight: number;
+  bmi: string;
+}
+
+// Modified to accept unknown so better usable in Express too
+export const parseBmiArgs = (args: Array<unknown>): ParsedBmiArgs => {
   if (args.length < 2) throw new Error('Not enough arguments');
   if (args.length > 2) throw new Error('Too many arguments');
 
@@ -15,7 +26,7 @@ const parsedBmiArgs = (args: Array<string>): BmiArgs => {
   return { height, weight };
 };
 
-const calculateBmi = (height: number, weight: number): string => {
+export const calculateBmi = (height: number, weight: number): string => {
   const heightAsMeters: number = height / 100;
   const BMI: number = weight / heightAsMeters ** 2;
 
@@ -30,8 +41,9 @@ const calculateBmi = (height: number, weight: number): string => {
 // console.log(calculateBmi(180, 33));
 // console.log(calculateBmi(180, 120));
 
+// 9.3
 try {
-  const { height, weight } = parsedBmiArgs(process.argv.slice(2));
+  const { height, weight } = parseBmiArgs(process.argv.slice(2));
   console.log(calculateBmi(height, weight));
 } catch (error) {
   let errorMessage = 'Something bad happened.';

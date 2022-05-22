@@ -30,7 +30,7 @@ const getRating = (consistency: number, success: boolean): Rating => {
 
 const getRatingDescription = (rating: Rating): RatingDescription => ratings[rating];
 
-const parsedExerciseArgs = (args: Array<string>): ExerciseArgs => {
+const parseExerciseArgs = (args: Array<string>): ExerciseArgs => {
   if (args.length < 2) throw new Error('Not enough arguments');
 
   const [target, ...dailyExerciseHours] = args.map((arg) => {
@@ -72,8 +72,9 @@ multiple values in a single loop.
 // 9.2
 // console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
 
+// 9.3
 try {
-  const { dailyExerciseHours, target }: ExerciseArgs = parsedExerciseArgs(process.argv.slice(2));
+  const { dailyExerciseHours, target }: ExerciseArgs = parseExerciseArgs(process.argv.slice(2));
   console.log(calculateExercises(dailyExerciseHours, target));
 } catch (error) {
   let errorMessage = 'Something bad happened.';
