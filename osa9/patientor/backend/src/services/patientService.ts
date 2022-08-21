@@ -5,7 +5,7 @@ import { NonSensitivePatientEntry, NewPatientEntry, PatientEntry } from '../type
 
 // Exclude the social security number from results
 const getNonSensitiveEntries = (): NonSensitivePatientEntry[] =>
-  patients.map(({ ssn:_ssn, ...sensitiveEntry }) => sensitiveEntry);
+  patients.map(({ ssn: _ssn, ...sensitiveEntry }) => sensitiveEntry);
 
 const addPatient = (patient: NewPatientEntry): PatientEntry => {
   const newPatient = { id: uuid(), ...patient };
