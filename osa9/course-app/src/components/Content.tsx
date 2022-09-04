@@ -1,16 +1,12 @@
-interface CoursePart {
-  name: string;
-  exerciseCount: number;
-}
+import { CoursePart } from '../App';
+import Part from './Part';
 
-const Content = ({ courseParts }: { courseParts: CoursePart[] }) => {
-  const contentItems = courseParts.map((coursePart) => (
-    <p key={coursePart.toString()}>
-      {coursePart.name} {coursePart.exerciseCount}
-    </p>
-  ));
-
-  return <>{contentItems}</>;
-};
+const Content = ({ courseParts }: { courseParts: CoursePart[] }) => (
+  <>
+    {courseParts.map((coursePart) => (
+      <Part key={coursePart.toString()} coursePart={coursePart} />
+    ))}
+  </>
+);
 
 export default Content;
