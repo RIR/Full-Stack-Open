@@ -1,4 +1,4 @@
-import { Gender, NewPatientEntry } from './types';
+import { Entry, Gender, NewPatientEntry } from './types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const toNewPatientEntry = (object: any): NewPatientEntry => {
@@ -8,6 +8,7 @@ const toNewPatientEntry = (object: any): NewPatientEntry => {
     ssn: parseSSN(object.ssn),
     gender: parseGender(object.gender),
     occupation: parseOccupation(object.occupation),
+    entries: parseEntries(object.entries),
   };
 
   return newEntry;
@@ -50,6 +51,13 @@ const parseOccupation = (occupation: unknown): string => {
   return occupation;
 };
 
+const parseEntries = (entries: unknown): Entry[] => {
+  if (!entries || !isEntries(entries)) {
+    throw new Error('Incorrect or missing entries');
+  }
+  return entries;
+};
+
 // Type guards
 const isString = (txt: unknown): txt is string => {
   return typeof txt === 'string' || txt instanceof String;
@@ -63,6 +71,11 @@ const isDate = (str: string): boolean => {
 const isGender = (param: any): param is Gender => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   return Object.values(Gender).includes(param);
+};
+
+// TODO
+const isEntries = (_param: unknown): _param is Entry[] => {
+  return true;
 };
 
 export default toNewPatientEntry;

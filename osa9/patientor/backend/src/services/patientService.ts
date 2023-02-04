@@ -1,13 +1,18 @@
 import patients from '../../data/patients';
 import { v1 as uuid } from 'uuid';
 
-import { NonSensitivePatientEntry, NewPatientEntry, PatientEntry } from '../types';
+import { PublicPatient, NewPatientEntry, Patient } from '../types';
 
 // Exclude the social security number from results
-const getNonSensitiveEntries = (): NonSensitivePatientEntry[] =>
-  patients.map(({ ssn: _ssn, ...sensitiveEntry }) => sensitiveEntry);
+const getNonSensitiveEntries = (): PublicPatient[] =>
+  patients.map(({ ssn: _ssn, entries: _entries, ...sensitiveEntry }) => sensitiveEntry);
 
-const addPatient = (patient: NewPatientEntry): PatientEntry => {
+// TODO get patient with id
+const getPatient = (id: string): undefined | Patient => {
+  return patients.find((patient) => patient.id === id);
+};
+
+const addPatient = (patient: NewPatientEntry): Patient => {
   const newPatient = { id: uuid(), ...patient };
   patients.push(newPatient);
   return newPatient;
@@ -15,5 +20,6 @@ const addPatient = (patient: NewPatientEntry): PatientEntry => {
 
 export default {
   getNonSensitiveEntries,
+  getPatient,
   addPatient,
 };
