@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import { Patient } from '../types';
 import { apiBaseUrl } from '../constants';
-import { useStateValue } from '../state';
+import { updatePatient, useStateValue } from '../state';
 import { useParams } from 'react-router-dom';
 import { Box, Typography } from '@material-ui/core';
 import MaleIcon from '@mui/icons-material/Male';
@@ -27,7 +27,7 @@ const PatientInformationPage = () => {
 
         console.log({ fetchedPatient });
 
-        dispatch({ type: 'UPDATE_PATIENT', payload: fetchedPatient });
+        dispatch(updatePatient(fetchedPatient));
         setPatient(fetchedPatient);
       } catch (e: unknown) {
         if (axios.isAxiosError(e)) {
