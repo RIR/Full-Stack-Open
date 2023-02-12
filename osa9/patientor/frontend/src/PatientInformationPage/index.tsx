@@ -10,7 +10,7 @@ import FemaleIcon from '@mui/icons-material/Female';
 import ControlCameraIcon from '@mui/icons-material/ControlCamera';
 
 const PatientInformationPage = () => {
-  const [{ patients }, dispatch] = useStateValue();
+  const [{ patients, diagnoses }, dispatch] = useStateValue();
   const [patient, setPatient] = React.useState<Patient>();
   const { id } = useParams<{ id: string }>();
 
@@ -65,7 +65,7 @@ const PatientInformationPage = () => {
                   <ListItemIcon>
                     <ControlCameraIcon />
                   </ListItemIcon>
-                  <ListItemText primary={code} />
+                  <ListItemText primary={`${code} ${diagnoses && diagnoses[code].name}`} />
                 </ListItem>
               ))}
             </List>
