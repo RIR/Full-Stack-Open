@@ -13,7 +13,7 @@ export type Action =
   | {
       type: 'UPDATE_PATIENT';
       payload: Patient;
-    };
+  };
 
 export const setPatientList: (patients: Patient[]) => Action = (patients: Patient[]) => {
   return { type: 'SET_PATIENT_LIST', payload: patients };
