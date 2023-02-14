@@ -4,13 +4,15 @@ import { Patient } from '../types';
 import { apiBaseUrl } from '../constants';
 import { updatePatient, useStateValue } from '../state';
 import { useParams } from 'react-router-dom';
-import { Box, Typography, List, ListItem, ListItemText, ListItemIcon } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
+// import { Box, Typography, List, ListItem, ListItemText, ListItemIcon } from '@material-ui/core';
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
-import ControlCameraIcon from '@mui/icons-material/ControlCamera';
+// import ControlCameraIcon from '@mui/icons-material/ControlCamera';
+import EntryDetails from '../components/EntryDetails/EntryDetails.';
 
 const PatientInformationPage = () => {
-  const [{ patients, diagnoses }, dispatch] = useStateValue();
+  const [{ patients }, dispatch] = useStateValue();
   const [patient, setPatient] = React.useState<Patient>();
   const { id } = useParams<{ id: string }>();
 
@@ -55,23 +57,13 @@ const PatientInformationPage = () => {
       <Typography variant='h6' style={{ margin: '1em 0', fontWeight: 'bold' }}>
         Entries
       </Typography>
-      {patient?.entries?.map((entry) => {
-        return (
-          <>
-            <Typography key={entry.id}>{entry.description}</Typography>
-            <List dense>
-              {entry.diagnosisCodes?.map((code) => (
-                <ListItem key={code} dense>
-                  <ListItemIcon>
-                    <ControlCameraIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={`${code} ${diagnoses && diagnoses[code].name}`} />
-                </ListItem>
-              ))}
-            </List>
-          </>
-        );
-      })}
+      {patient?.entries?.map((entry) => (
+        <Box
+          key={entry.id}
+          style={{ margin: '1em 0', padding: '0.5em', border: '1px solid black', borderRadius: '10px' }}>
+          <EntryDetails entry={entry} />
+        </Box>
+      ))}
     </div>
   );
 };
