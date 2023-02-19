@@ -37,7 +37,7 @@ const OccupationalHealthCareEntryDetails: React.FC<{ entry: OccupationalHealthCa
       {sickLeave && (
         <Box style={{ margin: '1em 0' }}>
           <Typography variant='body2'>
-            Written sick leave to patient for the time period {sickLeave.startDate}-{sickLeave.endDate}
+            Written sick leave to patient for the time period {sickLeave.startDate} - {sickLeave.endDate}
           </Typography>
           <Typography variant='body2'>Patient is employed by {employerName}</Typography>
         </Box>

@@ -13,7 +13,6 @@ export type PatientFormValues = Omit<Patient, 'id' | 'entries'>;
 
 interface Props {
   onSubmit: (values: PatientFormValues) => Promise<void>;
-
   onCancel: () => void;
 }
 

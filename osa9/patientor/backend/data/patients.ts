@@ -1,7 +1,7 @@
 import { Gender, Patient } from '../src/types';
-import toNewPatientEntry from '../src/utils';
+import toNewPatient from '../src/utils/parseUtils';
 
-const patientData: Patient[] = [
+export const patientData: Patient[] = [
   {
     id: 'd2773336-f723-11e9-8f0b-362b9e155667',
     name: 'John McClane',
@@ -111,10 +111,9 @@ const patientData: Patient[] = [
   },
 ];
 
-// Done like in the study material, although this feels hacky as hell.
-const patients: Array<Patient> = patientData.map((entry) => {
-  const patient = toNewPatientEntry(entry) as Patient;
-  patient.id = entry.id;
+const patients: Array<Patient> = patientData.map((p) => {
+  const patient = toNewPatient(p) as Patient;
+  patient.id = p.id;
   return patient;
 });
 
