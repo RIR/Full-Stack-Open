@@ -4,8 +4,13 @@ My solutions for assignments of the [Full Stack Open](https://fullstackopen.com/
 
 Parts 0-4 completed on earlier implementations of the course.
 
-- [Part 5](https://github.com/RIR/Full-Stack-Open/tree/main/osa5)
-- [Part 6](https://github.com/RIR/Full-Stack-Open/tree/main/osa6)
-- [Part 7](https://github.com/RIR/Full-Stack-Open/tree/main/osa7)
-- [Part 8](https://github.com/RIR/Full-Stack-Open/tree/main/osa8)
-- [Part 9](https://github.com/RIR/Full-Stack-Open/tree/main/osa9)
+- [Part 0](/osa0)
+- [Part 1](/osa1)
+- [Part 2](/osa2)
+- Part 3 [Frontend](/osa3), [Backend](https://github.com/RIR/Full-Stack-Open-2019-Part-3-Backend)
+- [Part 4](/osa4)
+- [Part 5](/osa5)
+- [Part 6](/osa6)
+- [Part 7](/osa7)
+- [Part 8](/osa8)
+- [Part 9](/osa9)
