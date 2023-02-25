@@ -17,7 +17,7 @@ export enum HealthCheckRating {
   'CriticalRisk' = 3,
 }
 
-interface BaseEntry {
+export interface BaseEntry {
   id: string;
   description: string;
   date: string;
@@ -51,7 +51,6 @@ export type Entry = HealthCheckEntry | OccupationalHealthCareEntry | HospitalEnt
 
 // Define special omit for unions
 export type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
-
 
 export interface Patient {
   id: string;

@@ -8,3 +8,4 @@ Parts 0-4 completed on earlier implementations of the course.
 - [Part 6](https://github.com/RIR/Full-Stack-Open-2021/tree/main/osa6)
 - [Part 7](https://github.com/RIR/Full-Stack-Open-2021/tree/main/osa7)
 - [Part 8](https://github.com/RIR/Full-Stack-Open-2021/tree/main/osa8)
+- [Part 9](https://github.com/RIR/Full-Stack-Open-2021/tree/main/osa9)

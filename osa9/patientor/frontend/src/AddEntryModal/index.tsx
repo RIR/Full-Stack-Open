@@ -1,7 +1,8 @@
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, Divider } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
-import AddEntryForm, { EntryFormValues } from './AddEntryForm';
+import AddEntryForm from './AddEntryForm';
+import { EntryFormValues } from './types';
 
 interface Props {
   modalOpen: boolean;

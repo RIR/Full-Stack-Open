@@ -11,7 +11,7 @@ import FemaleIcon from '@mui/icons-material/Female';
 // import ControlCameraIcon from '@mui/icons-material/ControlCamera';
 import EntryDetails from '../components/EntryDetails/EntryDetails.';
 import AddEntryModal from '../AddEntryModal';
-import { EntryFormValues } from '../AddEntryModal/AddEntryForm';
+import { EntryFormValues } from '../AddEntryModal/types';
 
 const PatientInformationPage = () => {
   const [{ patients }, dispatch] = useStateValue();
