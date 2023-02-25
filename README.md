@@ -1,6 +1,6 @@
-# Full-Stack-Open-2021
+# Full-Stack-Open
 
-My solutions for assignments of the [Full Stack Open](https://fullstackopen.com/) 2021 course by University of Helsinki.
+My solutions for assignments of the [Full Stack Open](https://fullstackopen.com/) course by University of Helsinki.
 
 Parts 0-4 completed on earlier implementations of the course.
 
